@@ -20,7 +20,7 @@ Make sure you have installed:
 
 - **Node.js**
 
-# Steps to Run a Project
+### Steps to Run a Project
 1.Download this project:
 ```
 https://github.com/c-Kuria/Portfolio-2.0.git
@@ -38,11 +38,11 @@ Run the project:
 ```
 npm run dev
 ```
-# Open in browser:
+## Open in browser:
 
 Access the application in your browser via the link that appears in the terminal.
 
-# Creating a Production Ready Version
+## Creating a Production Ready Version
 To create a production build:
 
 Run the build command:
@@ -51,7 +51,7 @@ npm run build
 ```
 The build result files will be saved in the folder dist. You can upload this folder to your hosting server.
 
-Notes
+### Notes
 If there is a problem running the project, make sure:
 
 - Node.js is installed correctly.
