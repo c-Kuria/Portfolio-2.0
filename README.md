@@ -15,19 +15,19 @@ Tech Stack used:
 # Project Running Tutorial
 Here is a simple guide to running this project.
 
-# Preparation
+## Preparation
 Make sure you have installed:
 
 - **Node.js**
 
 # Steps to Run a Project
 1.Download this project:
-```bash
+```
 https://github.com/c-Kuria/Portfolio-2.0.git
 ```
 
 2.Install all the requirements:
-```bash
+```
 npm install
 ```
 or by means of
