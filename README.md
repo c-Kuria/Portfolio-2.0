@@ -1,2 +1,13 @@
 # Portfolio-2.0
-A personal portfolio website showcasing projects, skills, and experience, built with modern web technologies.
+Interactive portfolio website highlighting skills, projects, and experience with a modern, responsive design.
+
+Tech Stack used:
+
+  ReactJS
+  Tailwind CSS
+  AOS
+  Firebase
+  Motion Framer
+  Lucidity
+  Material UI
+  SweetAlert2
