@@ -23,7 +23,7 @@ Make sure you have installed:
 ### Steps to Run a Project
 1.Download this project:
 ```
-https://github.com/c-Kuria/Portfolio-2.0.git
+git clone https://github.com/c-Kuria/Portfolio-2.0.git
 ```
 
 2.Install all the requirements:
