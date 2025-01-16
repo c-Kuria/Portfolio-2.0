@@ -1,7 +1,7 @@
-import Header from "./Header"
+import WelcomeScreen from "./pages/WelcomeScreen"
 
 function App() {
-  return(<Header/>
+  return(<WelcomeScreen/>
   )
 }
 
