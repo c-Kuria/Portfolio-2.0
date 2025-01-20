@@ -5,7 +5,7 @@ import Home from "./pages/Home";
 import About from "./pages/About";
 import AnimatedBackground from "./components/Background";
 import Navbar from "./components/Navbar";
-import Portofolio from "./pages/Portfolio";
+import Portfolio from "./pages/Portfolio";
 import ContactPage from "./pages/Contact";
 import ProjectDetails from "./components/ProjectDetail";
 import WelcomeScreen from "./pages/WelcomeScreen";
@@ -26,7 +26,7 @@ const LandingPage = ({ showWelcome, setShowWelcome }) => {
           <AnimatedBackground />
           <Home />
           <About />
-          <Portofolio />
+          <Portfolio />
           <ContactPage />
           <footer>
             <center>
