@@ -4,7 +4,7 @@ import { getStorage } from "firebase/storage";
 import { collection, addDoc } from "@firebase/firestore";
 
 const firebaseConfig = {
-    apiKey: "AIzaSyDJPq9a0YPoQYkpQ-Uaw7aXQRXzzqOKzFA",
+    apiKey: "Api-Key",
     authDomain: "web-kelas-tes.firebaseapp.com",
     projectId: "web-kelas-tes",
     storageBucket: "web-kelas-tes.appspot.com",
