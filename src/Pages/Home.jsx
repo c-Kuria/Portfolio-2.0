@@ -81,8 +81,8 @@ const WORDS = ["Software Engineering Student", "Tech Enthusiast"];
 const TECH_STACK = ["React", "Javascript", "Node.js", "Tailwind"];
 const SOCIAL_LINKS = [
   { icon: Github, link: "https://github.com/c-Kuria" },
-  { icon: Linkedin, link: "https://www.linkedin.com/in/ekizr/" },
-  { icon: Instagram, link: "https://www.instagram.com/ekizr_/?hl=id" }
+  // { icon: Linkedin, link: "https://www.linkedin.com/in//" },
+  // { icon: Instagram, link: "https://www.instagram.com/ /?hl=id" }
 ];
 
 const Home = () => {
