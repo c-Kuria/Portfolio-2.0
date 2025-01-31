@@ -1,8 +1,4 @@
-Here’s the translation of your text to English:  
-
----
-
-# Portfolio V5  
+# Portfolio
 Hello everyone!  
 I’m Brian Kuria, and I’d like to share the portfolio website project I’ve developed. 
 
@@ -17,9 +13,7 @@ I’m Brian Kuria, and I’d like to share the portfolio website project I’ve 
 - SweetAlert2  
 
 **Website Link:**  
-[https://www.../](https://www...../)  
-
-We would appreciate it if you decide to use this project. Please include credit when using it. Thank you! 🙏  
+[https://www.../](https://www...../)   
 
 ---
 
