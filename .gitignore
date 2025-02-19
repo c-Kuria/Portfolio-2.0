@@ -1,2 +1,5 @@
 node_modules
-firebase*
+
+src/firebase-comment.js
+
+src/firebase.js
