@@ -4,13 +4,14 @@ import { getStorage } from "firebase/storage";
 import { collection, addDoc } from "@firebase/firestore";
 
 const firebaseConfig = {
-    apiKey: "Api-Key",
-    authDomain: "web-kelas-tes.firebaseapp.com",
-    projectId: "web-kelas-tes",
-    storageBucket: "web-kelas-tes.appspot.com",
-    messagingSenderId: "890817433268",
-    appId: "1:890817433268:web:11e5258f8864a6174c11e1"
-};
+    apiKey: "AIzaSyCHw9LH0uVvHGWMzpgzQvkQGaaHL8IBawk",
+    authDomain: "portfolio-v2-fcced.firebaseapp.com",
+    projectId: "portfolio-v2-fcced",
+    storageBucket: "portfolio-v2-fcced.firebasestorage.app",
+    messagingSenderId: "447093756538",
+    appId: "1:447093756538:web:90c569a8bd40ce9920a1c3",
+    measurementId: "G-JRND7QXTLS"
+  };
 
 // Initialize with a unique name
 const app = initializeApp(firebaseConfig, 'comments-app');

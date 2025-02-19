@@ -205,7 +205,7 @@ const AboutPage = () => {
                 data-aos="fade-right"
                 data-aos-duration="1300"
               >
-                Brian Gathoni Kuria
+                Brian Kuria
               </span>
             </h2>
             
