@@ -57,6 +57,6 @@
     "postcss": "^8.4.47",
     "tailwind-scrollbar": "^3.1.0",
     "tailwindcss": "^3.4.14",
-    "vite": "^0.10.3"
+    "vite": "^6.1.1"
   }
 }
