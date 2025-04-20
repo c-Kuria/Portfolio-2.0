@@ -113,6 +113,21 @@ const StatCard = memo(({ icon: Icon, color, value, label, description, animation
   </div>
 ));
 
+const SkillCard = ({ icon, color, value, label, description, animation }) => {
+  // ... existing code ...
+}
+
+SkillCard.propTypes = {
+  icon: PropTypes.elementType.isRequired,
+  color: PropTypes.string.isRequired,
+  value: PropTypes.number.isRequired,
+  label: PropTypes.string.isRequired,
+  description: PropTypes.string.isRequired,
+  animation: PropTypes.string
+}
+
+SkillCard.displayName = 'SkillCard'
+
 const AboutPage = () => {
   // Memoized calculations
   const { totalProjects, totalCertificates, YearExperience } = useMemo(() => {
@@ -273,5 +288,7 @@ const AboutPage = () => {
     </div>
   );
 };
+
+AboutPage.displayName = 'About'
 
 export default memo(AboutPage);
