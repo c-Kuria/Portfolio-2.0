@@ -5,6 +5,7 @@ import { db, storage } from '../firebase-comment';
 import { MessageCircle, UserCircle2, Loader2, AlertCircle, Send, ImagePlus, X } from 'lucide-react';
 import AOS from "aos";
 import "aos/dist/aos.css";
+import PropTypes from 'prop-types';
 
 const Comment = memo(({ comment, formatDate, index }) => (
     <div 
@@ -36,6 +37,18 @@ const Comment = memo(({ comment, formatDate, index }) => (
         </div>
     </div>
 ));
+
+Comment.propTypes = {
+    comment: PropTypes.shape({
+        profileImage: PropTypes.string,
+        userName: PropTypes.string.isRequired,
+        createdAt: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+        content: PropTypes.string.isRequired
+    }).isRequired,
+    formatDate: PropTypes.func.isRequired
+};
+
+Comment.displayName = 'Comment';
 
 const CommentForm = memo(({ onSubmit, isSubmitting, error }) => {
     const [newComment, setNewComment] = useState('');
@@ -181,6 +194,13 @@ const CommentForm = memo(({ onSubmit, isSubmitting, error }) => {
     );
 });
 
+CommentForm.propTypes = {
+    onSubmit: PropTypes.func.isRequired,
+    isSubmitting: PropTypes.bool.isRequired
+};
+
+CommentForm.displayName = 'CommentForm';
+
 const Komentar = () => {
     const [comments, setComments] = useState([]);
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -315,5 +335,7 @@ const Komentar = () => {
     </div>
     );
 };
+
+Komentar.displayName = 'Komentar';
 
 export default Komentar;

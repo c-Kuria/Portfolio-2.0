@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types'
 import React, { useState } from 'react';
 import { Eye, ArrowRight, ExternalLink } from 'lucide-react';
 
@@ -53,5 +54,13 @@ const ProjectCardModal = ({ title, description, link }) => {
     </>
   );
 };
+
+ProjectCardModal.propTypes = {
+  title: PropTypes.string.isRequired,
+  description: PropTypes.string.isRequired,
+  link: PropTypes.string.isRequired
+}
+
+ProjectCardModal.displayName = 'ProjectCardModal'
 
 export default ProjectCardModal;

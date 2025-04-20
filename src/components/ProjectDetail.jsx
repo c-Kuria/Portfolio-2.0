@@ -5,6 +5,7 @@ import {
   ChevronRight, Layers, Layout, Globe, Package, Cpu, Code,
 } from "lucide-react";
 import Swal from 'sweetalert2';
+import PropTypes from 'prop-types';
 
 const TECH_ICONS = {
   React: Globe,
@@ -33,6 +34,12 @@ const TechBadge = ({ tech }) => {
   );
 };
 
+TechBadge.propTypes = {
+  tech: PropTypes.string.isRequired
+};
+
+TechBadge.displayName = 'TechBadge';
+
 const FeatureItem = ({ feature }) => {
   return (
     <li className="group flex items-start space-x-3 p-2.5 md:p-3.5 rounded-xl hover:bg-white/5 transition-all duration-300 border border-transparent hover:border-white/10">
@@ -46,6 +53,12 @@ const FeatureItem = ({ feature }) => {
     </li>
   );
 };
+
+FeatureItem.propTypes = {
+  feature: PropTypes.string.isRequired
+};
+
+FeatureItem.displayName = 'FeatureItem';
 
 const ProjectStats = ({ project }) => {
   const techStackCount = project?.TechStack?.length || 0;
@@ -77,6 +90,15 @@ const ProjectStats = ({ project }) => {
     </div>
   );
 };
+
+ProjectStats.propTypes = {
+  project: PropTypes.shape({
+    TechStack: PropTypes.arrayOf(PropTypes.string),
+    Features: PropTypes.arrayOf(PropTypes.string)
+  }).isRequired
+};
+
+ProjectStats.displayName = 'ProjectStats';
 
 const handleGithubClick = (githubLink) => {
   if (githubLink === 'Private') {
@@ -318,5 +340,7 @@ const ProjectDetails = () => {
     </div>
   );
 };
+
+ProjectDetails.displayName = 'ProjectDetails';
 
 export default ProjectDetails;

@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types'
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { ExternalLink, ArrowRight } from 'lucide-react';
@@ -84,5 +85,15 @@ const CardProject = ({ Img, Title, Description, Link: ProjectLink, id }) => {
     </div>
   );
 };
+
+CardProject.propTypes = {
+  Img: PropTypes.string.isRequired,
+  Title: PropTypes.string.isRequired,
+  Description: PropTypes.string.isRequired,
+  Link: PropTypes.string.isRequired,
+  id: PropTypes.string.isRequired
+}
+
+CardProject.displayName = 'CardProject'
 
 export default CardProject;

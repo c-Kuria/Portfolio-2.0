@@ -1,4 +1,4 @@
-import React from 'react';
+import PropTypes from 'prop-types'
 
 const TechStackIcon = ({ TechStackIcon, Language }) => {
   return (
@@ -17,5 +17,12 @@ const TechStackIcon = ({ TechStackIcon, Language }) => {
     </div>
   );
 };
+
+TechStackIcon.propTypes = {
+  TechStackIcon: PropTypes.elementType.isRequired,
+  Language: PropTypes.string.isRequired
+}
+
+TechStackIcon.displayName = 'TechStackIcon'
 
 export default TechStackIcon; 

@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types'
 import React, { useState } from "react";
 
 const InputField = ({ field, label, icon: Icon, formData, handleChange }) => {
@@ -84,5 +85,15 @@ const InputField = ({ field, label, icon: Icon, formData, handleChange }) => {
     </div>
   );
 };
+
+InputField.propTypes = {
+  field: PropTypes.string.isRequired,
+  label: PropTypes.string.isRequired,
+  icon: PropTypes.element.isRequired,
+  formData: PropTypes.object.isRequired,
+  handleChange: PropTypes.func.isRequired
+}
+
+InputField.displayName = 'InputField'
 
 export default InputField;

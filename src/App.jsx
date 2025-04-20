@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import React, { useState } from 'react';
 import "./index.css";
 import Home from "./Pages/Home";
@@ -10,6 +10,7 @@ import ContactPage from "./Pages/Contact";
 import ProjectDetails from "./components/ProjectDetail";
 import WelcomeScreen from "./Pages/WelcomeScreen";
 import { AnimatePresence } from 'framer-motion';
+import PropTypes from 'prop-types';
 
 const LandingPage = ({ showWelcome, setShowWelcome }) => {
   return (
@@ -46,6 +47,13 @@ const LandingPage = ({ showWelcome, setShowWelcome }) => {
   );
 };
 
+LandingPage.propTypes = {
+  showWelcome: PropTypes.bool.isRequired,
+  setShowWelcome: PropTypes.func.isRequired
+};
+
+LandingPage.displayName = 'LandingPage';
+
 const ProjectPageLayout = () => (
   <>
     <ProjectDetails />
@@ -68,13 +76,15 @@ function App() {
   const [showWelcome, setShowWelcome] = useState(true);
 
   return (
-    <BrowserRouter>
+    <Router>
       <Routes>
         <Route path="/" element={<LandingPage showWelcome={showWelcome} setShowWelcome={setShowWelcome} />} />
         <Route path="/project/:id" element={<ProjectPageLayout />} />
       </Routes>
-    </BrowserRouter>
+    </Router>
   );
 }
+
+App.displayName = 'App';
 
 export default App;

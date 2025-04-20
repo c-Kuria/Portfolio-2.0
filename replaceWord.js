@@ -1,10 +1,13 @@
 import fs from 'fs';
 import path from 'path';
 import readline from 'readline';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Set the directoryPath to the root folder
-const directoryPath = process.cwd(); // This points to the root directory of your project
-
+const directoryPath = __dirname;
 
 // Create an interface for user input
 const rl = readline.createInterface({
