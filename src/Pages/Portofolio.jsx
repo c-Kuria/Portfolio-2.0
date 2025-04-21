@@ -15,6 +15,9 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import Certificate from "../components/Certificate";
 import { Code, Award, Boxes } from "lucide-react";
+import { motion } from 'framer-motion';
+import { FaGithub, FaExternalLinkAlt } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 
 // Separate ShowMore/ShowLess button component
 const ToggleButton = ({ onClick, isShowingMore }) => (
@@ -80,7 +83,7 @@ function TabPanel({ children, value, index, ...other }) {
     >
       {value === index && (
         <Box sx={{ p: { xs: 1, sm: 3 } }}>
-          <Typography>{children}</Typography>
+          <div>{children}</div>
         </Box>
       )}
     </div>
@@ -115,7 +118,7 @@ const techStacks = [
   { icon: "SweetAlert.svg", language: "SweetAlert2" },
 ];
 
-export default function FullWidthTabs() {
+const Portofolio = () => {
   const theme = useTheme();
   const [value, setValue] = useState(0);
   const [projects, setProjects] = useState([]);
@@ -124,6 +127,9 @@ export default function FullWidthTabs() {
   const [showAllCertificates, setShowAllCertificates] = useState(false);
   const isMobile = window.innerWidth < 768;
   const initialItems = isMobile ? 4 : 6;
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Initialize AOS once
@@ -132,38 +138,37 @@ export default function FullWidthTabs() {
     });
   }, []);
 
-  const fetchData = useCallback(async () => {
-    try {
-      const projectCollection = collection(db, "projects");
-      const certificateCollection = collection(db, "certificates");
-
-      const [projectSnapshot, certificateSnapshot] = await Promise.all([
-        getDocs(projectCollection),
-        getDocs(certificateCollection),
-      ]);
-
-      const projectData = projectSnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-        TechStack: doc.data().TechStack || [],
-      }));
-
-      const certificateData = certificateSnapshot.docs.map((doc) => doc.data());
-
-      setProjects(projectData);
-      setCertificates(certificateData);
-
-      // Store in localStorage
-      localStorage.setItem("projects", JSON.stringify(projectData));
-      localStorage.setItem("certificates", JSON.stringify(certificateData));
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  }, []);
-
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        
+        // Fetch projects
+        const projectsSnapshot = await getDocs(collection(db, 'projects'));
+        const projectsData = projectsSnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }));
+        setProjects(projectsData);
+
+        // Fetch certificates
+        const certificatesSnapshot = await getDocs(collection(db, 'certificates'));
+        const certificatesData = certificatesSnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }));
+        setCertificates(certificatesData);
+      } catch (err) {
+        console.error('Error fetching data:', err);
+        setError('Failed to fetch data. Please try again later.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchData();
-  }, [fetchData]);
+  }, []);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -179,6 +184,35 @@ export default function FullWidthTabs() {
 
   const displayedProjects = showAllProjects ? projects : projects.slice(0, initialItems);
   const displayedCertificates = showAllCertificates ? certificates : certificates.slice(0, initialItems);
+
+  const handleProjectClick = (project) => {
+    localStorage.setItem('selectedProject', JSON.stringify(project));
+    navigate('/project-detail');
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-red-500 text-center">
+          <p className="text-xl font-bold">{error}</p>
+          <button 
+            onClick={() => window.location.reload()}
+            className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="md:px-[10%] px-[5%] w-full sm:mt-0 mt-[3rem] bg-[#030014] overflow-hidden" id="Portofolio">
@@ -368,3 +402,5 @@ export default function FullWidthTabs() {
     </div>
   );
 }
+
+export default Portofolio;
