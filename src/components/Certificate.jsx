@@ -61,7 +61,7 @@ const Certificate = ({ ImgSertif }) => {
 						src={ImgSertif}
 						alt="Certificate"
 						style={{
-							width: "100%",
+							width: "100%",	
 							height: "auto",	
 							display: "block",
 							objectFit: "cover",
