@@ -5,34 +5,45 @@ import path from 'path'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
+  server: {
+    port: 3000,
+    host: true,
+    strictPort: false,
+    open: true,
+    cors: true,
+    force: true,
+    hmr: {
+      overlay: true
+    }
+  },
+  preview: {
+    port: 3000,
+    strictPort: false
+  },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
     },
-  },
-  server: {
-    port: 5173,
-    host: true,
-    strictPort: true,
-    watch: {
-      usePolling: true,
-    },
+    extensions: ['.mjs', '.js', '.jsx', '.json', '.ts', '.tsx']
   },
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
-    sourcemap: true,
     rollupOptions: {
-      input: {
-        main: path.resolve(__dirname, 'index.html'),
-      },
+      output: {
+        manualChunks: undefined,
+        format: 'es',
+        chunkFileNames: 'assets/[name]-[hash].js',
+        entryFileNames: 'assets/[name]-[hash].js',
+      }
     },
+    manifest: true,
+    modulePreload: {
+      polyfill: true
+    }
   },
   optimizeDeps: {
-    include: ['react-swipeable-views'],
-    esbuildOptions: {
-      target: 'es2020',
-    },
+    include: ['react', 'react-dom', 'react-router-dom', 'framer-motion']
   },
   commonjsOptions: {
     include: [/node_modules/],

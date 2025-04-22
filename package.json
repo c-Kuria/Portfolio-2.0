@@ -4,11 +4,15 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "node node_modules/vite/bin/vite.js",
-    "build": "node node_modules/vite/bin/vite.js build",
+    "dev": "vite --host",
+    "build": "vite build",
     "lint": "eslint .",
-    "preview": "node node_modules/vite/bin/vite.js preview",
-    "vercel-build": "npm install --legacy-peer-deps --force && npm run build"
+    "preview": "vite preview",
+    "clean": "rm -rf node_modules .vite dist package-lock.json && npm cache clean --force",
+    "reinstall": "npm run clean && npm install --legacy-peer-deps --force",
+    "start:fresh": "npm run reinstall && npm run dev",
+    "dev:force": "vite --force --host 0.0.0.0",
+    "dev:debug": "DEBUG=vite:* vite"
   },
   "dependencies": {
     "@emotion/react": "^11.13.3",
