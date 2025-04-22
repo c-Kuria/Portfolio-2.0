@@ -20,6 +20,7 @@ export default defineConfig({
     port: 3000,
     strictPort: false
   },
+  base: './',
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
@@ -29,12 +30,20 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
+    sourcemap: true,
     rollupOptions: {
       output: {
         manualChunks: undefined,
-        format: 'es',
-        chunkFileNames: 'assets/[name]-[hash].js',
-        entryFileNames: 'assets/[name]-[hash].js',
+        assetFileNames: 'assets/[name].[hash].[ext]',
+        chunkFileNames: 'assets/[name].[hash].js',
+        entryFileNames: 'assets/[name].[hash].js',
+      }
+    },
+    cssCodeSplit: true,
+    minify: 'terser',
+    terserOptions: {
+      compress: {
+        drop_console: true
       }
     },
     manifest: true,
@@ -49,5 +58,17 @@ export default defineConfig({
     include: [/node_modules/],
     extensions: ['.js', '.cjs'],
   },
+  css: {
+    modules: {
+      localsConvention: 'camelCase',
+      generateScopedName: '[local]_[hash:base64:5]'
+    },
+    postcss: {
+      plugins: [
+        require('autoprefixer'),
+        require('tailwindcss')
+      ]
+    }
+  }
 })
 

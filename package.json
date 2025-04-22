@@ -12,7 +12,8 @@
     "reinstall": "npm run clean && npm install --legacy-peer-deps --force",
     "start:fresh": "npm run reinstall && npm run dev",
     "dev:force": "vite --force --host 0.0.0.0",
-    "dev:debug": "DEBUG=vite:* vite"
+    "dev:debug": "DEBUG=vite:* vite",
+    "vercel-build": "vite build"
   },
   "dependencies": {
     "@emotion/react": "^11.13.3",
