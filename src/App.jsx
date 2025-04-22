@@ -1,5 +1,5 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import React, { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import "./index.css";
 import Home from "./Pages/Home";
 import About from "./Pages/About";
@@ -78,8 +78,42 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<LandingPage showWelcome={showWelcome} setShowWelcome={setShowWelcome} />} />
-        <Route path="/project/:id" element={<ProjectPageLayout />} />
+        <Route 
+          path="/" 
+          element={
+            <>
+              <AnimatePresence mode="wait">
+                {showWelcome && (
+                  <WelcomeScreen onLoadingComplete={() => setShowWelcome(false)} />
+                )}
+              </AnimatePresence>
+
+              {!showWelcome && (
+                <>
+                  <Navbar />
+                  <AnimatedBackground />
+                  <Home />
+                  <About />
+                  <Portofolio />
+                  <ContactPage />
+                  <footer>
+                    <center>
+                      <hr className="my-3 border-gray-400 opacity-15 sm:mx-auto lg:my-6 text-center" />
+                      <span className="block text-sm pb-4 text-gray-500 text-center dark:text-gray-400">
+                        © 2025{" "}
+                        <a href="https://flowbite.com/" className="hover:underline">
+                          Brian™
+                        </a>
+                        . All Rights Reserved.
+                      </span>
+                    </center>
+                  </footer>
+                </>
+              )}
+            </>
+          } 
+        />
+        <Route path="/project/:id" element={<ProjectDetails />} />
       </Routes>
     </Router>
   );
