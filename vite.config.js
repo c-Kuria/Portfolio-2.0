@@ -31,19 +31,32 @@ export default defineConfig({
     outDir: 'dist',
     assetsDir: 'assets',
     sourcemap: true,
+    chunkSizeWarningLimit: 1000,
     rollupOptions: {
       output: {
-        manualChunks: undefined,
-        assetFileNames: 'assets/[name].[hash].[ext]',
-        chunkFileNames: 'assets/[name].[hash].js',
+        manualChunks: {
+          'vendor-react': ['react', 'react-dom', 'react-router-dom'],
+          'vendor-mui': ['@mui/material', '@mui/icons-material', '@emotion/react', '@emotion/styled'],
+          'vendor-animation': ['framer-motion', 'aos', 'gsap'],
+          'vendor-utils': ['@splinetool/react-spline', '@splinetool/runtime', 'sweetalert2'],
+        },
+        chunkFileNames: (chunkInfo) => {
+          const name = chunkInfo.name;
+          if (name.includes('vendor')) {
+            return 'assets/vendor/[name].[hash].js';
+          }
+          return 'assets/chunks/[name].[hash].js';
+        },
         entryFileNames: 'assets/[name].[hash].js',
+        assetFileNames: 'assets/[name].[hash].[ext]'
       }
     },
     cssCodeSplit: true,
     minify: 'terser',
     terserOptions: {
       compress: {
-        drop_console: true
+        drop_console: true,
+        drop_debugger: true
       }
     },
     manifest: true,
@@ -52,7 +65,15 @@ export default defineConfig({
     }
   },
   optimizeDeps: {
-    include: ['react', 'react-dom', 'react-router-dom', 'framer-motion']
+    include: [
+      'react',
+      'react-dom',
+      'react-router-dom',
+      'framer-motion',
+      '@mui/material',
+      '@emotion/react',
+      '@emotion/styled'
+    ]
   },
   commonjsOptions: {
     include: [/node_modules/],
@@ -62,12 +83,6 @@ export default defineConfig({
     modules: {
       localsConvention: 'camelCase',
       generateScopedName: '[local]_[hash:base64:5]'
-    },
-    postcss: {
-      plugins: [
-        require('autoprefixer'),
-        require('tailwindcss')
-      ]
     }
   }
 })
