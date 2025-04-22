@@ -2,7 +2,6 @@ import React, { useEffect, useState, useCallback } from "react";
 import { db, collection } from "../firebase";
 import { getDocs } from "firebase/firestore";
 import PropTypes from "prop-types";
-import SwipeableViews from 'react-swipeable-views';
 import { useTheme } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar";
 import Tabs from "@mui/material/Tabs";
@@ -18,7 +17,7 @@ import { Code, Award, Boxes } from "lucide-react";
 import { motion } from 'framer-motion';
 import { FaGithub, FaExternalLinkAlt } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
-import { virtualize, bindKeyboard } from 'react-swipeable-views-utils';
+import SwipeableView from '../components/SwipeableView';
 
 // Separate ShowMore/ShowLess button component
 const ToggleButton = ({ onClick, isShowingMore }) => (
@@ -237,7 +236,6 @@ const Portofolio = () => {
       </div>
 
       <Box sx={{ width: "100%" }}>
-        {/* AppBar and Tabs section - unchanged */}
         <AppBar
           position="static"
           elevation={0}
@@ -261,7 +259,6 @@ const Portofolio = () => {
           }}
           className="md:px-4"
         >
-          {/* Tabs remain unchanged */}
           <Tabs
             value={value}
             onChange={handleChange}
@@ -269,7 +266,6 @@ const Portofolio = () => {
             indicatorColor="secondary"
             variant="fullWidth"
             sx={{
-              // Existing styles remain unchanged
               minHeight: "70px",
               "& .MuiTab-root": {
                 fontSize: { xs: "0.9rem", md: "1rem" },
@@ -324,10 +320,10 @@ const Portofolio = () => {
           </Tabs>
         </AppBar>
 
-        <SwipeableViews
-          axis={theme.direction === "rtl" ? "x-reverse" : "x"}
+        <SwipeableView
           index={value}
           onChangeIndex={setValue}
+          axis="x"
         >
           <TabPanel value={value} index={0} dir={theme.direction}>
             <div className="container mx-auto flex justify-center items-center overflow-hidden">
@@ -398,7 +394,7 @@ const Portofolio = () => {
               </div>
             </div>
           </TabPanel>
-        </SwipeableViews>
+        </SwipeableView>
       </Box>
     </div>
   );
