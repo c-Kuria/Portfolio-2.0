@@ -35,10 +35,9 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          'vendor-react': ['react', 'react-dom', 'react-router-dom'],
-          'vendor-mui': ['@mui/material', '@mui/icons-material', '@emotion/react', '@emotion/styled'],
-          'vendor-animation': ['framer-motion', 'aos', 'gsap'],
-          'vendor-utils': ['@splinetool/react-spline', '@splinetool/runtime', 'sweetalert2'],
+          vendor: ['react', 'react-dom', 'react-router-dom'],
+          mui: ['@mui/material', '@mui/icons-material'],
+          animations: ['framer-motion', 'aos', 'gsap']
         },
         chunkFileNames: (chunkInfo) => {
           const name = chunkInfo.name;

@@ -1,4 +1,8 @@
 .git
 node_modules
 .env
-.env.* 
+.env.*
+npm-debug.log
+README.md
+.gitignore
+.vscode 
