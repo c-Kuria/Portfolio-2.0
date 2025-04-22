@@ -8,7 +8,7 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "vercel-build": "npm install --legacy-peer-deps && npm run build"
+    "vercel-build": "npm install --legacy-peer-deps --force && npm run build"
   },
   "dependencies": {
     "@emotion/react": "^11.13.3",
@@ -38,6 +38,7 @@
     "react-icons": "^5.5.0",
     "react-intersection-observer": "^9.13.1",
     "react-router-dom": "^6.28.0",
+    "react-swipeable-views": "0.14.0",
     "react-swipeable-views-utils": "0.14.0",
     "shadcn-ui": "^0.2.3",
     "spline": "^0.0.0",
