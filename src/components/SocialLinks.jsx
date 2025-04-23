@@ -21,16 +21,16 @@ const socialLinks = [
   {
     name: "Instagram",
     displayName: "Instagram",
-    subText: "@c-Kuria",
+    subText: "_k.u.r.ia",
     icon: Instagram,
-    url: "https://www.instagram.com/",
+    url: "https://www.instagram.com/_k.u.r.ia/",
     color: "#E4405F",
     gradient: "from-[#833AB4] via-[#E4405F] to-[#FCAF45]"
   },
   {
     name: "YouTube",
     displayName: "Youtube",
-    subText: "@c-Kuria",
+    subText: "",
     icon: Youtube,
     url: "https://www.youtube.com",
     color: "#FF0000",
@@ -48,7 +48,7 @@ const socialLinks = [
   {
     name: "TikTok",
     displayName: "Tiktok",
-    subText: "c-Kuria",
+    subText: "",
     icon: ({ className, ...props }) => (
      <svg width="24px" height="24px" viewBox="0 0 45 45" version="1.1" xmlns="http://www.w3.org/2000/svg">
     <title>Tiktok</title>
@@ -61,7 +61,7 @@ const socialLinks = [
     </g>
 </svg>
     ),
-    url: "https://tiktok.com/@c-Kuria",
+    url: "https://tiktok.com",
     color: "black",
     gradient: "from-[#000000] via-[#25F4EE] to-[#FE2C55]"
   }

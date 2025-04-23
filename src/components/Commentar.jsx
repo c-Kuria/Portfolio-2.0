@@ -50,18 +50,60 @@ Comment.propTypes = {
 
 Comment.displayName = 'Comment';
 
+const uploadToCloudinary = async (file) => {
+    try {
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('upload_preset', import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET);
+        formData.append('cloud_name', import.meta.env.VITE_CLOUDINARY_CLOUD_NAME);
+
+        const response = await fetch(
+            `https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME}/image/upload`,
+            {
+                method: 'POST',
+                body: formData,
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error('Upload failed');
+        }
+
+        const data = await response.json();
+        return data.secure_url;
+    } catch (error) {
+        console.error('Error uploading to Cloudinary:', error);
+        throw new Error('Failed to upload image');
+    }
+};
+
 const CommentForm = memo(({ onSubmit, isSubmitting, error }) => {
     const [newComment, setNewComment] = useState('');
     const [userName, setUserName] = useState('');
     const [imagePreview, setImagePreview] = useState(null);
     const [imageFile, setImageFile] = useState(null);
+    const [imageError, setImageError] = useState('');
+    const [isUploading, setIsUploading] = useState(false);
     const textareaRef = useRef(null);
     const fileInputRef = useRef(null);
+
+    const validateImage = (file) => {
+        if (file.size > 2 * 1024 * 1024) { // 2MB limit
+            setImageError('Image must be less than 2MB');
+            return false;
+        }
+        if (!file.type.startsWith('image/')) {
+            setImageError('File must be an image');
+            return false;
+        }
+        setImageError('');
+        return true;
+    };
 
     const handleImageChange = useCallback((e) => {
         const file = e.target.files[0];
         if (file) {
-            if (file.size > 5 * 1024 * 1024) return;
+            if (!validateImage(file)) return;
             setImageFile(file);
             const reader = new FileReader();
             reader.onloadend = () => setImagePreview(reader.result);
@@ -77,16 +119,36 @@ const CommentForm = memo(({ onSubmit, isSubmitting, error }) => {
         }
     }, []);
 
-    const handleSubmit = useCallback((e) => {
+    const handleSubmit = useCallback(async (e) => {
         e.preventDefault();
         if (!newComment.trim() || !userName.trim()) return;
         
-        onSubmit({ newComment, userName, imageFile });
-        setNewComment('');
-        setImagePreview(null);
-        setImageFile(null);
-        if (fileInputRef.current) fileInputRef.current.value = '';
-        if (textareaRef.current) textareaRef.current.style.height = 'auto';
+        try {
+            setIsUploading(true);
+            let imageUrl = null;
+            
+            if (imageFile) {
+                imageUrl = await uploadToCloudinary(imageFile);
+            }
+            
+            await onSubmit({ 
+                newComment, 
+                userName, 
+                imageFile: imageUrl // Send the Cloudinary URL instead of the file
+            });
+            
+            // Reset form
+            setNewComment('');
+            setImagePreview(null);
+            setImageFile(null);
+            if (fileInputRef.current) fileInputRef.current.value = '';
+            if (textareaRef.current) textareaRef.current.style.height = 'auto';
+            
+        } catch (error) {
+            setImageError('Failed to upload image. Please try again.');
+        } finally {
+            setIsUploading(false);
+        }
     }, [newComment, userName, imageFile, onSubmit]);
 
     return (
@@ -98,7 +160,7 @@ const CommentForm = memo(({ onSubmit, isSubmitting, error }) => {
                 <input
                     type="text"
                     value={userName}
-                    onChange={(e) => setUserName(e.target.value)}z
+                    onChange={(e) => setUserName(e.target.value)}
                     placeholder="Enter your name"
                     className="w-full p-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-400 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all"
                     required
@@ -136,6 +198,7 @@ const CommentForm = memo(({ onSubmit, isSubmitting, error }) => {
                                 onClick={() => {
                                     setImagePreview(null);
                                     setImageFile(null);
+                                    setImageError('');
                                     if (fileInputRef.current) fileInputRef.current.value = '';
                                 }}
                                 className="flex items-center gap-2 px-4 py-2 rounded-full bg-red-500/20 text-red-400 hover:bg-red-500/30 transition-all group"
@@ -145,7 +208,7 @@ const CommentForm = memo(({ onSubmit, isSubmitting, error }) => {
                             </button>
                         </div>
                     ) : (
-                        <div className="w-full" >
+                        <div className="w-full">
                             <input
                                 type="file"
                                 ref={fileInputRef}
@@ -162,25 +225,27 @@ const CommentForm = memo(({ onSubmit, isSubmitting, error }) => {
                                 <span>Choose Profile Photo</span>
                             </button>
                             <p className="text-center text-gray-400 text-sm mt-2">
-                                Max file size: 5MB
+                                Max file size: 2MB
                             </p>
                         </div>
                     )}
                 </div>
+                {imageError && (
+                    <p className="text-red-400 text-sm mt-1">{imageError}</p>
+                )}
             </div>
 
             <button
                 type="submit"
-                disabled={isSubmitting}
-                data-aos="fade-up" data-aos-duration="1000"
+                disabled={isSubmitting || isUploading}
                 className="relative w-full h-12 bg-gradient-to-r from-[#6366f1] to-[#a855f7] rounded-xl font-medium text-white overflow-hidden group transition-all duration-300 hover:scale-[1.02] hover:shadow-lg active:scale-[0.98] disabled:opacity-50 disabled:hover:scale-100 disabled:cursor-not-allowed"
             >
                 <div className="absolute inset-0 bg-white/20 translate-y-12 group-hover:translate-y-0 transition-transform duration-300" />
                 <div className="relative flex items-center justify-center gap-2">
-                    {isSubmitting ? (
+                    {isSubmitting || isUploading ? (
                         <>
                             <Loader2 className="w-4 h-4 animate-spin" />
-                            <span>Posting...</span>
+                            <span>{isUploading ? 'Posting...' : 'Posting...'}</span>
                         </>
                     ) : (
                         <>
@@ -239,11 +304,10 @@ const Komentar = () => {
         setIsSubmitting(true);
         
         try {
-            const profileImageUrl = await uploadImage(imageFile);
             await addDoc(collection(db, 'portfolio-comments'), {
                 content: newComment,
                 userName,
-                profileImage: profileImageUrl,
+                profileImage: imageFile, // This is now the Cloudinary URL
                 createdAt: serverTimestamp(),
             });
         } catch (error) {
@@ -252,7 +316,7 @@ const Komentar = () => {
         } finally {
             setIsSubmitting(false);
         }
-    }, [uploadImage]);
+    }, []);
 
     const formatDate = useCallback((timestamp) => {
         if (!timestamp) return '';
