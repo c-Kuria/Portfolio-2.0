@@ -3,7 +3,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { ExternalLink, ArrowRight } from 'lucide-react';
 
-const CardProject = ({ Img, Title, Description, Link: ProjectLink, id }) => {
+const CardProject = ({ Img, Title, Description, Link: ProjectLink, id, TechStack, Features, Github }) => {
   // Handle empty ProjectLink
   const handleLiveDemo = (e) => {
     if (!ProjectLink || ProjectLink.trim() === '') {
@@ -18,7 +18,20 @@ const CardProject = ({ Img, Title, Description, Link: ProjectLink, id }) => {
       console.log("ID is empty");
       e.preventDefault();
       alert("Project details are not available");
+      return;
     }
+    
+    // Store the complete project data
+    localStorage.setItem('selectedProject', JSON.stringify({
+      id,
+      Title,
+      Description,
+      Img,
+      Link: ProjectLink,
+      Github,
+      TechStack: TechStack || [],
+      Features: Features || [],
+    }));
   };
 
   // Validate required props
@@ -97,7 +110,10 @@ CardProject.propTypes = {
   Title: PropTypes.string.isRequired,
   Description: PropTypes.string.isRequired,
   Link: PropTypes.string,
-  id: PropTypes.string
+  id: PropTypes.string,
+  TechStack: PropTypes.arrayOf(PropTypes.string),
+  Features: PropTypes.arrayOf(PropTypes.string),
+  Github: PropTypes.string
 };
 
 CardProject.displayName = 'CardProject';

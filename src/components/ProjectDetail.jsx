@@ -6,6 +6,8 @@ import {
 } from "lucide-react";
 import Swal from 'sweetalert2';
 import PropTypes from 'prop-types';
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from '../firebase';
 
 const TECH_ICONS = {
   React: Globe,
@@ -74,7 +76,7 @@ const ProjectStats = ({ project }) => {
         </div>
         <div className="flex-grow">
           <div className="text-lg md:text-xl font-semibold text-blue-200">{techStackCount}</div>
-          <div className="text-[10px] md:text-xs text-gray-400">Total Teknologi</div>
+          <div className="text-[10px] md:text-xs text-gray-400">Tech Stack</div>
         </div>
       </div>
 
@@ -84,7 +86,7 @@ const ProjectStats = ({ project }) => {
         </div>
         <div className="flex-grow">
           <div className="text-lg md:text-xl font-semibold text-purple-200">{featuresCount}</div>
-          <div className="text-[10px] md:text-xs text-gray-400">Fitur Utama</div>
+          <div className="text-[10px] md:text-xs text-gray-400">Main Features</div>
         </div>
       </div>
     </div>
@@ -105,7 +107,7 @@ const handleGithubClick = (githubLink) => {
     Swal.fire({
       icon: 'info',
       title: 'Source Code Private',
-      text: 'Maaf, source code untuk proyek ini bersifat privat.',
+      text: 'Sorry, the source code for this project is private.',
       confirmButtonText: 'Mengerti',
       confirmButtonColor: '#3085d6',
       background: '#030014',
@@ -120,30 +122,120 @@ const ProjectDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [project, setProject] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [isImageLoaded, setIsImageLoaded] = useState(false);
 
   useEffect(() => {
-    window.scrollTo(0, 0);
-    const storedProjects = JSON.parse(localStorage.getItem("projects")) || [];
-    const selectedProject = storedProjects.find((p) => String(p.id) === id);
-    
-    if (selectedProject) {
-      const enhancedProject = {
-        ...selectedProject,
-        Features: selectedProject.Features || [],
-        TechStack: selectedProject.TechStack || [],
-        Github: selectedProject.Github || 'https://github.com/c-Kuria',
-      };
-      setProject(enhancedProject);
-    }
+    const loadProject = async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
+
+        // Try to get project from localStorage first
+        const selectedProject = JSON.parse(localStorage.getItem("selectedProject"));
+        console.log('Selected Project from localStorage:', selectedProject); // Debug log
+        
+        if (selectedProject && selectedProject.id === id) {
+          const projectWithDefaults = {
+            ...selectedProject,
+            TechStack: selectedProject.TechStack || [],
+            Features: selectedProject.Features || [],
+            Github: selectedProject.Github || '#'
+          };
+          console.log('Project with defaults:', projectWithDefaults); // Debug log
+          setProject(projectWithDefaults);
+          setIsLoading(false);
+          return;
+        }
+
+        // If not in localStorage, fetch from Firestore
+        const projectRef = doc(db, 'projects', id);
+        const projectDoc = await getDoc(projectRef);
+
+        if (projectDoc.exists()) {
+          const projectData = {
+            id: projectDoc.id,
+            ...projectDoc.data(),
+            TechStack: projectDoc.data().TechStack || [],
+            Features: projectDoc.data().Features || [],
+            Github: projectDoc.data().Github || '#'
+          };
+          setProject(projectData);
+          // Update localStorage with fresh data
+          localStorage.setItem('selectedProject', JSON.stringify(projectData));
+        } else {
+          throw new Error('Project not found');
+        }
+      } catch (err) {
+        console.error('Error loading project:', err);
+        setError('Failed to load project details. Please try again.');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadProject();
+    window.scrollTo(0, 0); // Scroll to top when loading project
   }, [id]);
 
-  if (!project) {
+  // Show loading state
+  if (isLoading) {
     return (
       <div className="min-h-screen bg-[#030014] flex items-center justify-center">
         <div className="text-center space-y-6 animate-fadeIn">
-          <div className="w-16 h-16 md:w-24 md:h-24 mx-auto border-4 border-blue-500/30 border-t-blue-500 rounded-full animate-spin" />
+          <div className="relative">
+            <div className="w-16 h-16 md:w-24 md:h-24 mx-auto border-4 border-blue-500/30 border-t-blue-500 rounded-full animate-spin" />
+            <div className="absolute inset-0 blur-xl bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-full" />
+          </div>
           <h2 className="text-xl md:text-3xl font-bold text-white">Loading Project...</h2>
+          <p className="text-gray-400">Please wait while we fetch the project details</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show error state
+  if (error) {
+    return (
+      <div className="min-h-screen bg-[#030014] flex items-center justify-center">
+        <div className="text-center space-y-6 p-8 max-w-md mx-auto">
+          <div className="w-16 h-16 mx-auto text-red-500">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+          </div>
+          <h2 className="text-xl md:text-3xl font-bold text-white">Failed to Load Project</h2>
+          <p className="text-gray-400">{error}</p>
+          <button
+            onClick={() => navigate(-1)}
+            className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+          >
+            Go Back
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // Show not found state
+  if (!project) {
+    return (
+      <div className="min-h-screen bg-[#030014] flex items-center justify-center">
+        <div className="text-center space-y-6 p-8 max-w-md mx-auto">
+          <div className="w-16 h-16 mx-auto text-yellow-500">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <h2 className="text-xl md:text-3xl font-bold text-white">Project Not Found</h2>
+          <p className="text-gray-400">The project you're looking for doesn't exist or has been removed.</p>
+          <button
+            onClick={() => navigate(-1)}
+            className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+          >
+            Go Back to Projects
+          </button>
         </div>
       </div>
     );
